@@ -16,6 +16,9 @@ day_letters = dict(zip(day, letters))
 
 # -------------------------------------------------------------------------------------------
 
+# Использовал глобальную переменную пути к файлу, для формы "отчет"
+file = ''
+
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -32,11 +35,13 @@ class MainWindow(QMainWindow):
         self.openBookBtn.pressed.connect(self.open_book_btn)
         self.createBtn.pressed.connect(self.cr_table)
         self.readBtn.pressed.connect(self.read)
+        self.reportBtn.pressed.connect(self.report)
         for i in range(14, 22):
             getattr(self, 'lineEdit_%s' % i).returnPressed.connect(getattr(self, 'Plus_%s' % i).click)
 
     # Создать таблицу
     def cr_table(self):
+        global file
         date = self.calendarWidget.selectedDate()  # Дата из календаря
         date_month = str(date.month())
         date_year = str(date.year())
@@ -65,6 +70,7 @@ class MainWindow(QMainWindow):
 
     # Резерв
     def reserve(self):
+        global file
         date = self.calendarWidget.selectedDate()  # Дата из календаря
         file_name = str(date.year()) + '_' + str(date.month()) + '.xlsx'  # Имя файла
         file = "d:/_google disk/Финансы/" + file_name  # Путь к файлу
@@ -92,6 +98,7 @@ class MainWindow(QMainWindow):
 
     # Зарплата
     def salary(self):
+        global file
         date = self.calendarWidget.selectedDate()  # Дата из календаря
         file_name = str(date.year()) + '_' + str(date.month()) + '.xlsx'  # Имя файла
         file = "d:/_google disk/Финансы/" + file_name  # Путь к файлу
@@ -124,6 +131,7 @@ class MainWindow(QMainWindow):
 
     # Расходы
     def costs(self):
+        global file
         date = self.calendarWidget.selectedDate()  # Дата из календаря
         file_name = str(date.year()) + '_' + str(date.month()) + '.xlsx'  # Имя файла
         file = "d:/_google disk/Финансы/" + file_name  # Путь к файлу
@@ -158,6 +166,7 @@ class MainWindow(QMainWindow):
 
     # Прочитать ячейки
     def read(self):
+        global file
         try:
             date = self.calendarWidget.selectedDate()  # Дата из календаря
             file_name = str(date.year()) + '_' + str(date.month()) + '.xlsx'  # Имя файла
@@ -211,6 +220,7 @@ class MainWindow(QMainWindow):
 
     # Функция для кнопки открытия файла
     def open_book_btn(self):
+        global file
         date = self.calendarWidget.selectedDate()  # Дата из календаря
         file_name = str(date.year()) + '_' + str(date.month()) + '.xlsx'  # Имя файла
         file = "d:/_google disk/Финансы/" + file_name  # Путь к файлу
@@ -218,6 +228,34 @@ class MainWindow(QMainWindow):
             subprocess.call(file, shell=True)
         else:
             self.error_no_file()
+
+    # Отчет за месяц
+    def report(self):
+        if file == '':
+            msg = QtWidgets.QMessageBox()
+            msg.setText("Сначала нажмите считать!")
+            msg.setIcon(QtWidgets.QMessageBox.Critical)
+            msg.setWindowTitle('ОШИБКА!')
+            msg.setStyleSheet("color : white ;"
+                              "background-color: #2f3237; ")
+            msg.exec_()
+        else:
+
+            Report(self).show()
+
+
+class Report(QMainWindow):
+    def __init__(self, parent=None):
+        QMainWindow.__init__(self, parent)
+        uic.loadUi("report.ui", self)
+        book = load_workbook(file, data_only=True)  # Открыть файл excel
+        sheet = book.active  # Выбрать активный лист
+        if sheet['E9'].value is not None:
+            self.tableWidget.setItem(0, 0,  QtWidgets.QTableWidgetItem(str(sheet['E9'].value)))
+        if sheet['M6'].value is not None:
+            self.tableWidget.setItem(0, 1, QtWidgets.QTableWidgetItem(str(sheet['M6'].value)))
+        if sheet['F24'].value is not None:
+            self.tableWidget.setItem(0, 2, QtWidgets.QTableWidgetItem(str(sheet['F24'].value)))
 
 
 def main():

@@ -27,7 +27,7 @@
   </property>
   <property name="styleSheet">
    <string notr="true">background-color:#2f3237;
-</string>
+selection-color:&quot;white&quot;;</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QLabel" name="label">
@@ -708,6 +708,22 @@ QCalendarWidget QWidget { alternate-background-color:#26282b; }</string>
      <string>Считать</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="reportBtn">
+    <property name="geometry">
+     <rect>
+      <x>310</x>
+      <y>130</y>
+      <width>111</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color:'white'</string>
+    </property>
+    <property name="text">
+     <string>Отчет</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -715,10 +731,18 @@ QCalendarWidget QWidget { alternate-background-color:#26282b; }</string>
      <x>0</x>
      <y>0</y>
      <width>440</width>
-     <height>26</height>
+     <height>28</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(49,49,49);
+            color: rgb(255,255,255);
+            border: 1px solid #000;</string>
+   </property>
    <widget class="QMenu" name="menu">
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
     <property name="title">
      <string>Меню</string>
     </property>
